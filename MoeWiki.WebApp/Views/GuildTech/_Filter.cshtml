@@ -1,0 +1,75 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MOEWiki.DBMySQL.Enums
+
+@model List<Research>
+
+@{
+    Layout = null;
+}
+<div class="accordion-item mb-1">
+    <h4 class="accordion-header">
+        <button class="accordion-button item-index" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_cp" aria-expanded="true" aria-controls="collapse_cp">
+            Calculate parameters
+        </button>
+    </h4>
+    <div id="collapse_cp" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+            <div class="container">
+                <div>
+                    Now have:
+                </div>
+                <div>
+                    <label for="guild_level">Guild Level</label>
+                    <br />
+                    <input type="range" id="guild_level" name="guild_level" list="markers_guild_level" min="1" max="9" value="1" />
+                </div>
+                <datalist id="markers_guild_level">
+                    <option value="1" label="1"></option>
+                    <option value="2" label="2"></option>
+                    <option value="3" label="3"></option>
+                    <option value="4" label="4"></option>
+                    <option value="5" label="5"></option>
+                    <option value="6" label="6"></option>
+                    <option value="7" label="7"></option>
+                    <option value="8" label="8"></option>
+                    <option value="9" label="9"></option>
+                </datalist>
+                @foreach (var gt in Model.OrderByDescending(o => o.Level))
+                {
+                    <div>
+                        <label for="prevtech_@gt.Id">@gt.Name</label>
+                        <br />
+                        <input class="prev-tech" type="checkbox" id="prevtech_@gt.Id" entityId="@gt.Id" onchange="UpdateCheckboxes(this, 'prevtech_','prev-tech')" data-parents="[@gt.PreviousId]" name="prevtech_@gt.Id" />
+                    </div>
+                }
+                <button id="Calculate">Calculate</button>
+                <div id="result">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function GetFilterParams() {
+        return {
+            'Filter.TargetId': function () { return $('#selected_tech').attr('entityId'); },
+            'Filter.GuildLvlHave': function () { return $('#guild_level').val(); },
+            'Filter.IdsStr': function () {
+                var result = '';
+                $(".prev-tech:checked").each(function () {
+                    result += $(this).attr("entityId") + ',';
+                });
+                return result;
+            },
+        }
+    }
+    $(document).ready(function () {
+        $('#Calculate').click(function () {
+            $('#result').empty();
+            $.post("/GuildTech/Calculate", GetFilterParams(), function (data) {
+                $(data).appendTo($('#result'));
+            });            
+        });
+    });
+</script>

@@ -1,0 +1,118 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MoeWiki.WebApp.Models.Home
+
+@{
+    ViewData["Title"] = "Search Result";
+    var path = "/img/icon/";
+}
+@model SearchResultModel
+
+
+
+<div class="p-2">
+    Search: "@ViewBag.SearchString"
+</div>
+<div class="accordion" id="accordionS">
+    @{
+        if (Model.items.Any())
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItems" aria-expanded="true" aria-controls="collapseItems">
+                        Items
+                    </button>
+                </h2>
+                <div id="collapseItems" class="accordion-collapse collapse show" data-bs-parent="#accordionS">
+                    <div class="accordion-body">
+                        @Html.Partial("/Views/Item/_List.cshtml", Model.items)
+                    </div>
+                </div>
+            </div>
+        }
+        if (Model.perks.Any())
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePerks" aria-expanded="true" aria-controls="collapsePerks">
+                        Perks
+                    </button>
+                </h2>
+                <div id="collapsePerks" class="accordion-collapse collapse show" data-bs-parent="#accordionS">
+                    <div class="accordion-body">
+                        <div class="container text-center">
+                            <div class="row">
+                                @foreach (var item in Model.perks)
+                                {
+                                    <div class="col col-12 col-sm-4	col-md-2 col-lg-2 col-xl-1">
+                                        <div class="d-flex flex-row mb-3">
+                                            <div class="p-2">
+                                                <a href="/Perk/Index/?id=@item.Id">@item.Name</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        if (Model.guildSkills.Any())
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGuildSkills" aria-expanded="true" aria-controls="collapseGuildSkills">
+                        Guild Skills
+                    </button>
+                </h2>
+                <div id="collapseGuildSkills" class="accordion-collapse collapse show" data-bs-parent="#accordionS">
+                    <div class="accordion-body">
+                        <div class="container text-center">
+                            <div class="row">
+                                @foreach (var item in Model.guildSkills)
+                                {
+                                    <div class="col col-12 col-sm-4	col-md-2 col-lg-2 col-xl-1">
+                                        <div class="d-flex flex-row mb-3">
+                                            <div class="p-2">
+                                                <a href="/GuildSkill/Index/?id=@item.Id">@item.Name</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        if (Model.subcategories.Any())
+        {
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSubcategories" aria-expanded="true" aria-controls="collapseSubcategories">
+                        Subcategories
+                    </button>
+                </h2>
+                <div id="collapseSubcategories" class="accordion-collapse collapse show" data-bs-parent="#accordionS">
+                    <div class="accordion-body">
+                        <div class="container text-center">
+                            <div class="row">
+                                @foreach (var item in Model.subcategories)
+                                {
+                                    <div class="col col-12 col-sm-4	col-md-2 col-lg-2 col-xl-1">
+                                        <div class="d-flex flex-row mb-3">
+                                            <div class="p-2">
+                                                <a href="/Item/List/?subcategoryId=@item.Id">@item.Name</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }   
+</div>
+

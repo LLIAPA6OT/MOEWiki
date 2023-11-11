@@ -1,0 +1,45 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MOEWiki.DBMySQL.Enums
+
+@model List<GuildSkill>
+
+
+@{
+    var width = 300;
+    var height = 80;
+    var intervalW = 100;
+    var intervalH = 20;
+    var widthpx = $"{width - intervalW}px";
+    var heightpx = $"{height - intervalH}px";
+    <div>
+        @{
+            <div class="position-relative align-middle" style="height: 75vh;width: 100%; overflow-x: scroll">
+                @foreach (var perk in Model)
+                {
+                    var left = $"{(perk.Column - 1) * width + intervalW}px";
+                    var top = $"{(perk.Row - 1) * height + intervalH}px";
+                    <div class="perk border tree-elem text-center align-items-center" id="entity_@perk.Id" row="@perk.Row" col="@perk.Column" data-parents="[@string.Join(',', perk.GuildSkillRelations.Select(s => s.PrevGuildSkillId.ToString()))]" style="position: absolute; left: @left; top: @top; width: @widthpx; height: @heightpx; z-index: 100;">
+                        @perk.Name
+                    </div>
+                    var topP = $"{perk.Row * height}px";
+                    <div class="align-items-start tree-item-tooltip" id="tooltip_@perk.Id" style="position: absolute; left: @left; top: @topP; width: @widthpx; height: @heightpx; display: none; z-index: 101;">
+                        <div class="p-2 tree-elem-content">@perk.Description</div>
+                        <div class="d-flex">
+                            <div class="p-2 tree-elem-content flex-grow-1">Max Level</div>
+                            <div class="p-2 tree-elem-content">@perk.MaxLevel</div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        $('.perk').each(function () {
+            if ($(this).data('parents').length > 0) {
+                DrawConnect($(this).attr('id'), $(this).data('parents'), @width, @height, @intervalW, @intervalH);
+            }
+        });
+    });
+</script>

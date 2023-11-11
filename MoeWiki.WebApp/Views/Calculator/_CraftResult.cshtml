@@ -1,0 +1,31 @@
+﻿@using MoeWiki.WebApp.Models.Calculator
+
+@model CraftItemResultModel
+
+@{
+    Layout = null;
+}
+
+
+<div class="accordion accordion-flush" id="accordion2">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-cost2" aria-expanded="false" aria-controls="flush-cost2">
+                Cost
+            </button>
+        </h2>
+        <div id="flush-cost2" class="accordion-collapse collapse" data-bs-parent="#accordion2">
+            @Html.Partial("/Views/Item/_Cost.cshtml", Model.costItems)
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-primitive2" aria-expanded="false" aria-controls="flush-primitive2">
+                Cost in primitive
+            </button>
+        </h2>
+        <div id="flush-primitive2" class="accordion-collapse collapse" data-bs-parent="#accordion2">
+            @Html.Partial("/Views/Item/_Primitive.cshtml", Model.primitiveItems)
+        </div>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MOEWiki.DBMySQL.Enums
+
+@model List<GuildSkill>
+
+@{
+    var first = Model.FirstOrDefault();
+    Layout = null;
+}
+@if (first != null)
+{
+
+    <div class="accordion-item mb-1">
+        <h4 class="accordion-header">
+            <button class="accordion-button item-index" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_cp" aria-expanded="true" aria-controls="collapse_cp">
+                Calculate parameters
+            </button>
+        </h4>
+        <div id="collapse_cp" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+                <div class="container">
+                    <div>
+                        Slected skill:
+                    </div>
+                    <div>
+                        <label for="selected_gs">@first.Name</label><span id="span_selected_gs">(1)</span>
+                        <br />
+                        <input type="range" id="selected_gs" entityId="@first.Id" name="selected_gs" list="markers_selected_gs" onchange="UpdateSpan(this)" min="1" max="@first.MaxLevel" value="1" />
+                        <datalist id="markers_selected_gs">
+                            <option value="1" label="1"></option>
+                            @if (first.MaxLevel == 90)
+                            {
+                                for (int i = 1; i < 9; i++)
+                                {
+                                    <option value="@(i*10)" label="@(i*10)"></option>
+                                }
+                            }
+                            else if (first.MaxLevel < 10)
+                            {
+                                for (int i = 2; i < first.MaxLevel; i++)
+                                {
+                                    <option value="@i" label="@i"></option>
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 1; i < first.MaxLevel / 5; i++)
+                                {
+                                    <option value="@(i*5)" label="@(i*5)"></option>
+                                }
+                            }
+                            <option value="@first.MaxLevel" label="@first.MaxLevel"></option>
+                        </datalist>
+                    </div>
+                    <div>
+                        Now have:
+                    </div>
+                    <div>
+                        <label for="guild_level">Guild Level</label><span id="span_guild_level">(1)</span>
+                        <br />
+                        <input type="range" id="guild_level" name="guild_level" list="markers_guild_level" onchange="UpdateSpan(this)" min="1" max="9" value="1" />
+                    </div>
+                    <datalist id="markers_guild_level">
+                        <option value="1" label="1"></option>
+                        <option value="2" label="2"></option>
+                        <option value="3" label="3"></option>
+                        <option value="4" label="4"></option>
+                        <option value="5" label="5"></option>
+                        <option value="6" label="6"></option>
+                        <option value="7" label="7"></option>
+                        <option value="8" label="8"></option>
+                        <option value="9" label="9"></option>
+                    </datalist>
+                    @foreach (var gs in Model.OrderBy(o => o.Column).ThenBy(o => o.Row))
+                    {
+                    <div>
+                        <label for="reqgs_@gs.Id">@gs.Name</label><span id="span_reqgs_@gs.Id">(1)</span>
+                        <br />
+                        <input class="req-skill" type="range" list="markers_@gs.Id" id="reqgs_@gs.Id" name="reqgs_@gs.Id" entityId="@gs.Id" reqtype="@gs.PrevRequiresType" onchange="CheckValuesGS(this)" data-parents="[@string.Join(',', gs.GuildSkillRelations.Select(s => s.PrevGuildSkillId.ToString()))]" min="0" max="@gs.MaxLevel" value="0" />
+                    </div>
+                    <datalist id="markers_@gs.Id">
+                        <option value="0" label="0"></option>
+                        @if (gs.MaxLevel == 90)
+                        {
+                            for (int i = 1; i < 9; i++)
+                            {
+                                <option value="@(i*10)" label="@(i*10)"></option>
+                            }
+                        }
+                        else if (gs.MaxLevel < 10)
+                        {
+                            for (int i = 1; i < gs.MaxLevel; i++)
+                            {
+                                <option value="@i" label="@i"></option>
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 1; i < gs.MaxLevel / 5; i++)
+                            {
+                                <option value="@(i*5)" label="@(i*5)"></option>
+                            }
+                        }
+                        <option value="@gs.MaxLevel" label="@gs.MaxLevel"></option>
+                    </datalist>
+                    }
+                    <button id="Calculate">Calculate</button>
+                    <div id="result">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+ 
+}
+
+<script>
+    function GetFilterParams() {
+        return {
+            'Filter.TargetId': function () { return $('#selected_gs').attr("entityId"); },
+            'Filter.TargetValue': function () { return $('#selected_gs').val(); },
+            'Filter.GuildLvlHave': function () { return $('#guild_level').val(); },
+            'Filter.IdsStr': function () {
+                var result = '';
+                $(".req-skill").each(function () {
+                    result += $(this).attr("entityId") + ',';
+                });
+                return result;
+            },
+            'Filter.ValsStr': function () {
+                var result = '';
+                $(".req-skill").each(function () {
+                    result += $(this).val() + ',';
+                });
+                return result;
+            },
+        }
+    }
+    $(document).ready(function () {
+        $('#Calculate').click(function () {
+            $('#result').empty();
+            $.post("/GuildSkill/Calculate", GetFilterParams(), function (data) {
+                $(data).appendTo($('#result'));
+            });            
+        });
+    });
+</script>

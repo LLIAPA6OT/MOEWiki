@@ -1,0 +1,215 @@
+:root {
+    --color-primary: rgba(60,29,27,1.0);
+    --color-lb-darker: rgba(55,15,13,1.0);
+    --color-value: rgba(136,64,67,1.0);
+    --color-black: rgba(1,0,0,1.0);
+    --bgc-primary: rgba(177,173,162,1.0);
+    --bgc-prop: rgba(166,163,154,1.0);
+    --bgc-item-head: rgba(200,197,188,1.0);
+}
+
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+    font-size: 16px;
+  }
+}
+
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 50px;
+}
+
+
+
+.tree-elem {
+    border-color: var(--color-black) !important;
+    background-color: var(--bgc-prop) !important;
+}
+.tree-elem-content {
+    background-color: var(--bgc-item-head) !important;
+}
+.tree-item-tooltip {
+    background-color: var(--bgc-prop) !important;
+}
+
+#body1 {
+    color: var(--color-primary);
+    font-weight: 500 !important;
+    background-color: var(--bgc-primary);
+}
+
+#body1 a {
+    color: var(--color-primary);
+}
+
+.detail-container {
+    border-width: 5px;
+    border-color: var(--color-black);
+    border-style: ridge;
+}
+
+.prop-Level, .value-color {
+    color: var(--color-value);
+}
+.prop-Description {
+    color: var(--color-black);
+}
+.bgc-light-gray, .prop-Description {
+    background-color: var(--bgc-item-head);
+}
+
+.other-attr-color {
+    color: var(--color-lb-darker);
+}
+
+.item-prop-bgc {
+    background-color: var(--bgc-prop);
+}
+.navbar{
+    background-color: var(--bgc-item-head) !important;
+
+}
+
+.accordion-item {
+    color: var(--color-primary) !important;
+    background-color: var(--bgc-prop) !important;
+}
+.accordion-body {
+}
+.accordion-button.item-index {
+    font-size: 80%;
+}
+.accordion-button {
+    font-weight: 500 !important;
+    color: var(--color-lb-darker) !important;
+    background-color: var(--bgc-prop) !important;
+}
+    .accordion-button:not(.collapsed) {
+        background-color: var(--bgc-item-head) !important;
+    }
+
+
+.nav-link {
+    font-weight: 500 !important;
+    color: var(--color-primary) !important;
+}
+    .nav-link.active {
+        background-color: var(--bgc-prop) !important;
+        border-width: 5px;
+        border-color: var(--color-black);
+        border-style: ridge;
+    }
+
+datalist {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    writing-mode: vertical-lr;
+    width: 600px;
+}
+
+option {
+    padding: 0;
+}
+
+input[type="range"] {
+    width: 600px;
+    margin: 0;
+}
+
+/*Chrome*/
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    input[type='range'] {
+        overflow: hidden;
+        -webkit-appearance: none;
+        background-color: #9a905d;
+    }
+
+        input[type='range']::-webkit-slider-runnable-track {
+            height: 10px;
+            -webkit-appearance: none;
+            color: var(--color-value);
+            margin-top: -1px;
+        }
+
+        input[type='range']::-webkit-slider-thumb {
+            width: 10px;
+            -webkit-appearance: none;
+            height: 10px;
+            cursor: ew-resize;
+            background: var(--color-black);
+            box-shadow: -600px 0 0 600px var(--color-value);
+        }
+}
+/** FF*/
+input[type="range"]::-moz-range-progress {
+    background-color: var(--color-value);
+}
+
+input[type="range"]::-moz-range-track {
+    background-color: #9a905d;
+}
+/* IE*/
+input[type="range"]::-ms-fill-lower {
+    background-color: var(--color-value);
+}
+
+input[type="range"]::-ms-fill-upper {
+    background-color: #9a905d;
+}
+
+
+#map {
+    height: 81vh;
+    position: relative;
+    background-color: var(--bgc-primary) !important;
+}
+
+.panel {
+    height: 81vh;
+    width: 320px;
+    position: absolute;
+    left: 0;
+    top: 100;
+    background-color:  var(--bgc-prop);
+    z-index: 500;
+    overflow-y: scroll;
+    scrollbar-width: thin
+}
+
+.button {
+    border: 4px #928269 solid;
+    font-size: 1.3em;
+    background: --bgc-item-head;
+    color: --color-lb-darker;
+    cursor: pointer;
+    display: inline-block;
+    margin: 2px;
+    border-radius: 0.25rem;
+}
+
+.panel_buttons {
+    padding: 10px;
+    text-align: center
+}
+
+.tree-header {
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: hidden; /* Обрезаем все, что не помещается в область */
+    padding: 1px; /* Поля вокруг текста */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+}
+
+.poster {
+    background-color: lightcoral;
+    text-align: center;
+}

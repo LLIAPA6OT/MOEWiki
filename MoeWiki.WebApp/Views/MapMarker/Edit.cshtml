@@ -1,0 +1,99 @@
+﻿@using System.Web.Mvc.Html
+@using MOEWiki.DBMySQL.Enums
+
+@model MapMarkerModel
+
+@{
+    ViewData["Title"] = "EditMapMarker";
+}
+
+<h1>Edit</h1>
+<h1 style="color: green">@ViewBag.Result</h1>
+
+<h4>MapMarker</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.MapId)
+            @Html.HiddenFor(m => m.IsDelete)
+            @Html.HiddenFor(m => m.CreationDate)
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarkerType" class="control-label"></label>
+                @Html.DropDownListFor(model => model.MarkerType, from MarkerTypeEnum d in Enum.GetValues(typeof(MarkerTypeEnum)) select new SelectListItem { Value = d.ToString(), Text = d.ToString() },
+                         "Select MarkerType",
+                         new { @class = "form-control" })
+                <span asp-validation-for="MarkerType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="X" class="control-label"></label>
+                <input asp-for="X" class="form-control" />
+                <span asp-validation-for="X" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Y" class="control-label"></label>
+                <input asp-for="Y" class="form-control" />
+                <span asp-validation-for="Y" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageName" class="control-label"></label>
+                <input asp-for="ImageName" class="form-control" />
+                <span asp-validation-for="ImageName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                @Html.TextAreaFor(m => m.Description, 10, 1, new { @class = "form-control" })
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Coalition" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Coalition, from CoalitionEnum d in Enum.GetValues(typeof(CoalitionEnum)) select new SelectListItem { Value = d.ToString(), Text = d.ToString() },
+                         "Select Coalition",
+                         new { @class = "form-control" })
+                <span asp-validation-for="Coalition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Enemies" class="control-label"></label>
+                @Html.TextAreaFor(m => m.Enemies, 5, 1, new { @class = "form-control" })
+                <span asp-validation-for="Enemies" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Link" class="control-label"></label>
+                <input asp-for="Link" class="form-control" />
+                <span asp-validation-for="Link" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LinkName" class="control-label"></label>
+                <input asp-for="LinkName" class="form-control" />
+                <span asp-validation-for="LinkName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Note" class="control-label"></label>
+                @Html.TextAreaFor(m => m.Note, 5, 1, new { @class = "form-control" })
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

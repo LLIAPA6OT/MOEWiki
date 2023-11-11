@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Realgar_svg" data-name="Realgar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 281.7 263.51">
+  <defs>
+    <style>
+		.cls-1 {
+		fill: #FFEC35;
+		fill-opacity: 0.4;
+		stroke: #FFEC35;
+		stroke-width: 5px;
+		}
+	</style>
+  </defs>
+  <g id="Realgar_g">
+    <polygon class="cls-1" points="3.94 49.17 105.6 3.17 131.94 10.17 171.27 56.51 236.27 112.17 276.27 153.51 278.6 175.51 254.6 211.17 260.94 242.17 191.6 243.51 179.94 260.51 131.27 260.51 102.94 247.51 39.27 257.84 25.94 244.51 22.94 209.51 30.6 150.17 25.94 99.51 3.94 49.17"/>
+  </g>
+</svg>

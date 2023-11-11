@@ -1,0 +1,60 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+@using MOEWiki.DBMySQL.Models
+
+@model List<Perk>
+
+@{
+    ViewData["Title"] = "Perks";
+}
+
+<div>
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item active" role="presentation">
+            <button class="nav-link active" id="strength-tab" data-bs-toggle="tab" data-bs-target="#strength-tab-pane" type="button" role="tab" aria-controls="strength-tab-pane" aria-selected="true">Strength</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="agility-tab" data-bs-toggle="tab" data-bs-target="#agility-tab-pane" type="button" role="tab" aria-controls="agility-tab-pane" aria-selected="true">Agility</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="phisique-tab" data-bs-toggle="tab" data-bs-target="#phisique-tab-pane" type="button" role="tab" aria-controls="phisique-tab-pane" aria-selected="true">Phisique</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="inteiligence-tab" data-bs-toggle="tab" data-bs-target="#inteiligence-tab-pane" type="button" role="tab" aria-controls="inteiligence-tab-pane" aria-selected="true">Inteiligence</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="charisma-tab" data-bs-toggle="tab" data-bs-target="#charisma-tab-pane" type="button" role="tab" aria-controls="charisma-tab-pane" aria-selected="true">Charisma</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        @{
+            var skillList = new List<SkillEnum>() { SkillEnum.OneHanded, SkillEnum.TwoHanded, SkillEnum.Shield, SkillEnum.Polearm, SkillEnum.HeavyArmor };
+                        <div class="tab-pane fade show active" id="strength-tab-pane" role="tabpanel" aria-labelledby="strength-tab" tabindex="0">
+                            @Html.Partial("/Views/Perk/_TabContent.cshtml", Model.Where(w => skillList.Contains(w.Skill)).ToList())
+                        </div>
+            skillList = new List<SkillEnum>() { SkillEnum.Bow, SkillEnum.Crossbow, SkillEnum.Projectile, SkillEnum.Riding, SkillEnum.LightArmor };
+                        <div class="tab-pane fade" id="agility-tab-pane" role="tabpanel" aria-labelledby="agility-tab" tabindex="1">
+                            @Html.Partial("/Views/Perk/_TabContent.cshtml", Model.Where(w => skillList.Contains(w.Skill)).ToList())
+                        </div>
+            skillList = new List<SkillEnum>() { SkillEnum.Physique, SkillEnum.Mining, SkillEnum.Lumbering, SkillEnum.Hunt, SkillEnum.Plant };
+                        <div class="tab-pane fade" id="phisique-tab-pane" role="tabpanel" aria-labelledby="phisique-tab" tabindex="2">
+                            @Html.Partial("/Views/Perk/_TabContent.cshtml", Model.Where(w => skillList.Contains(w.Skill)).ToList())
+                        </div>
+            skillList = new List<SkillEnum>() { SkillEnum.Siege, SkillEnum.Craft, SkillEnum.Building, SkillEnum.Armorer, SkillEnum.Medicine };
+                        <div class="tab-pane fade" id="inteiligence-tab-pane" role="tabpanel" aria-labelledby="inteiligence-tab" tabindex="3">
+                            @Html.Partial("/Views/Perk/_TabContent.cshtml", Model.Where(w => skillList.Contains(w.Skill)).ToList())
+                        </div>
+            skillList = new List<SkillEnum>() { SkillEnum.Command, SkillEnum.Recruitment, SkillEnum.Drills, SkillEnum.Tame, SkillEnum.Renown };
+                        <div class="tab-pane fade" id="charisma-tab-pane" role="tabpanel" aria-labelledby="charisma-tab" tabindex="4">
+                            @Html.Partial("/Views/Perk/_TabContent.cshtml", Model.Where(w => skillList.Contains(w.Skill)).ToList())
+                        </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#entity_' + @ViewBag.Id).trigger("click");
+    });
+</script>

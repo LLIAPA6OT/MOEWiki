@@ -1,0 +1,26 @@
+﻿@using MoeWiki.WebApp.Models.Item
+
+@model List<RecipeItem>
+
+@{
+    Layout = null;
+}
+
+@foreach (var irg in Model.Where(w => !w.IsStepByStep).GroupBy(g => g.Number))
+{
+    <div class="d-flex">
+        <div class="p-2 flex-grow-1">@string.Join(',', irg.Select(s => s.Name))</div>
+        <div class="p-2">@irg.Select(s => s.Count).Max()</div>
+    </div>
+}
+@if (Model.Any(w => w.IsStepByStep))
+{
+    <div class="p-2">Step-by-step materials:</div>
+    foreach (var ir in Model.Where(w => w.IsStepByStep))
+    {
+        <div class="d-flex">
+            <div class="p-2 flex-grow-1">@ir.Name</div>
+            <div class="p-2">@ir.Count</div>
+        </div>
+    }
+}

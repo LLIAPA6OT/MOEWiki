@@ -1,0 +1,143 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MOEWiki.DBMySQL.Enums
+@using MOEWiki.DBMySQL.Gateways
+
+@model Item
+@{
+    ViewData["Title"] = Model.Name;
+    var showQualityTabs = Model.ItemProperties.Any(a => a.Quality != QualityEnum.Low);
+    var path = "/images/icon/";
+}
+<div class="container detail-container">
+    <div class="d-flex mt-1 flex-row bgc-light-gray">
+        <div class="p-2">
+            <img src="@path@Model.ImageName">
+        </div>
+        <div class="d-flex flex-column mb-3 flex-grow-1">
+            <div class="d-flex align-items-start">
+                <div class="px-1 pb-1 h4">@Model.Name</div>
+            </div>
+            @{
+                var openOn = GatewaysFacade.ItemGateway.GetResearchLevel(Model.Id, Model.ResearchId);
+                if (openOn != 0)
+                {
+                    <div class="d-flex align-items-start openon">
+                        <div class="px-2">Unlock on level: @openOn</div>
+                    </div>
+                }
+            }
+            @foreach (var ip in Model.ItemProperties.Where(w => w.Name == "Weight" || w.Name == "Level" || (!showQualityTabs && w.Name == "Durability")).OrderBy(o => o.SortId))
+            {
+                var cl = "prop-" + ip.Name;
+                <div class="d-flex align-items-start @cl">
+                    <div class="px-2">@ip.Name: @ip.Value</div>
+                </div>                  
+            }
+            <div class="d-flex flex-row-reverse">
+                <div class="px-2">@Model.Subcategory.Name</div>
+            </div>
+        </div>
+    </div>
+    @if (showQualityTabs)
+    {
+        <ul class="nav mt-2 nav-tabs item-prop-bgc" id="myTab" role="tablist">
+            @foreach (var q in Model.ItemProperties.OrderBy(o => o.Quality).Select(s => s.Quality).Distinct())
+            {
+                var c = "nav-link" + (q == QualityEnum.Low ? " active" : "");
+                <li class="nav-item" role="presentation">
+                    <button class="@c" id="@q-tab" data-bs-toggle="tab" data-bs-target="#@q-tab-pane" type="button" role="tab" aria-controls="@q-tab-pane" aria-selected="true">@q</button>
+                </li>
+            }
+        </ul>
+        <div class="tab-content item-prop-bgc" id="myTabContent">
+            @foreach (var q in Model.ItemProperties.OrderBy(o => o.Quality).Select(s => s.Quality).Distinct())
+            {
+                var c = "tab-pane fade" + (q == QualityEnum.Low ? " show active" : "");
+                <div class="@c" id="@q-tab-pane" role="tabpanel" aria-labelledby="@q-tab" tabindex="0">
+                    @foreach (var ip in Model.ItemProperties.Where(w => w.Quality == q && w.Property.IsDependsByQuality).OrderBy(o => o.SortId))
+                    {
+                        <div class="d-flex">
+                            <div class="p-2 flex-grow-1">@ip.Name</div>
+                            <div class="p-2 value-color">@ip.Value</div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+    @if (Model.ItemProperties.Any(w => w.Name != "Weight" && w.Name != "Level" && w.Name != "Durability" && w.Name != "Description" && (!w.Property.IsDependsByQuality || !showQualityTabs)))
+    {
+        <div class="p-2 mt-1 other-attr-color item-prop-bgc">Other attributes:</div>        
+    }
+    @foreach (var ip in Model.ItemProperties.Where(w => !w.Property.IsHide && w.Name != "Weight" && w.Name != "Level" && w.Name != "Durability" && (!w.Property.IsDependsByQuality || !showQualityTabs)).OrderBy(o => o.SortId))
+    {
+        if (ip.Name == "Description")
+        {
+            <div class="p-2 mt-1 mb-1 prop-Description">@ip.Value</div>
+        }
+        else
+        {
+            <div class="d-flex item-prop-bgc">
+                <div class="p-2 flex-grow-1">@ip.Name</div>
+                @if (string.IsNullOrWhiteSpace(ip.HTMLValue))
+                {
+                    <div class="p-2 value-color">@ip.Value</div>
+                }
+                else
+                {
+                    <a href="@ip.HTMLValue">@ip.Value</a>
+                }
+            </div>                                
+        }
+    }
+    @if (Model.ItemRecipes.Any())
+    {
+        @Html.Partial("/Views/Item/_Cost.cshtml", Model.ItemRecipes)
+
+        <div class="p-2 bgc-light-gray"><button id="Calculate">Calculate any count</button></div>
+        <div class="accordion accordion-flush accordion-item-detail" id="accordion1">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-primitive" aria-expanded="false" aria-controls="flush-primitive">
+                        Decompose to primitive
+                    </button>
+                </h2>
+                <div id="flush-primitive" class="accordion-collapse collapse empty" data-bs-parent="#accordion1">
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-fullsequence" aria-expanded="false" aria-controls="flush-fullsequence">
+                        Full sequence of manufacture
+                    </button>
+                </h2>
+                <div id="flush-fullsequence" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                    @Html.Partial("/Views/Shared/_Plug.cshtml", "calculator")
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.accordion-button').click(function () {
+            var accbody = $($(this).data('bs-target'));
+            if ($(accbody).hasClass("empty")) {
+                var url = "/Item/GetPrimitive";
+                if ($(this).data('bs-target') == "flush-fullsequence") {
+                    return;
+                    url = "/Item/GetFullSequence";
+                }
+                $.get(url, { id: @Model.Id }, function (data) {
+                    $(data).appendTo($(accbody));
+                    $(accbody).removeClass("empty");
+                });
+            }
+        });
+        $('#Calculate').click(function () {
+            window.open('/Calculator/CraftItem/?id='+@Model.Id,'_blank' );
+        });
+    });
+</script>

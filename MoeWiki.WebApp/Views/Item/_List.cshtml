@@ -1,0 +1,41 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using MOEWiki.DBMySQL.Models
+
+@model List<Item>
+@{
+    Layout = null;
+    var path = "/images/icon/";
+}
+<div class="accordion" id="accordion1">
+    @foreach (var group in Model.OrderBy(o => o.Name).GroupBy(g => g.Name[0]))
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@group.Key" aria-expanded="true" aria-controls="collapse_@group.Key">
+                    @group.Key
+                </button>
+            </h2>
+            <div id="collapse_@group.Key" class="accordion-collapse collapse show" data-bs-parent="#accordion2">
+                <div class="accordion-body">
+                    <div class="container text-center">
+                        <div class="row">
+                            @foreach (var item in group)
+                            {
+                                <div class="p-2 col col-12 col-sm-4	col-md-2 col-lg-2 col-xl-2">
+                                    <div class="d-flex flex-column mb-3">
+                                        <div class="p-2">
+                                            <a class="item-link" href="/Item/Details/?id=@item.Id"><img src="@path@item.ImageName" href="/Item/Details/?id=@item.Id"></a>
+                                        </div>
+                                        <div class="p-2">
+                                            <a class="item-link" href="/Item/Details/?id=@item.Id">@item.Name</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

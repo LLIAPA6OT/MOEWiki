@@ -1,0 +1,46 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+@using MOEWiki.DBMySQL.Models
+
+@model List<Research>
+
+@{
+    ViewData["Title"] = "Research Tree";
+}
+
+<div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        @foreach (var type in Model.Select(s => s.ResearchBranch).Distinct().OrderBy(o => o))
+        {
+            if (type == ResearchBranchEnum.Guild) continue;
+            var c = "nav-link" + (type == ResearchBranchEnum.Workbench ? " active" : "");
+            <li class="nav-item" role="presentation">
+                <button class="@c" id="@type-tab" data-bs-toggle="tab" data-bs-target="#@type-tab-pane" type="button" role="tab" aria-controls="@type-tab-pane" aria-selected="true">@(((ResearchBranchEnum)type).AsString(EnumFormat.Description))</button>
+            </li>
+        }
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        @foreach (var type in Model.Select(s => s.ResearchBranch).Distinct().OrderBy(o => o))
+        {
+            if (type == ResearchBranchEnum.Guild) continue;
+            var c = "tab-pane fade" + (type == ResearchBranchEnum.Workbench ? " show active" : "");
+            <div class="@c" id="@type-tab-pane" role="tabpanel" aria-labelledby="@type-tab" tabindex="0">
+                @Html.Partial("/Views/Research/_Tree.cshtml", Model.Where(w => w.ResearchBranch == type).ToList())
+            </div>
+        }
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.research').click(function () {
+            var tt = $('#' + $(this).attr('id').replace("entity", "info"));
+            if ($(tt).css("display") == "none") {
+                $(tt).css("display", "block");
+            } else {
+                $(tt).css("display", "none");
+            }
+        });
+    });
+</script>

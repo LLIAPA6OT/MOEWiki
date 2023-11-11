@@ -1,0 +1,37 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+@using MOEWiki.DBMySQL.Models
+
+@model List<Research>
+
+@{
+    ViewData["Title"] = "GuildTech";
+}
+
+@{
+    <div id="selected_tech" value="0">Select tech to start calculate.</div>
+    <hr />
+    <div id="filter"></div>
+    @Html.Partial("/Views/Research/_Tree.cshtml", Model)
+}
+
+
+<script>
+    $(document).ready(function () {
+        $('.research').click(function () {
+            var tt = $('#' + $(this).attr('id').replace("entity", "info"));
+            if ($(tt).css("display") == "none") {
+                $(tt).css("display", "block");
+            } else {
+                $(tt).css("display", "none");
+            }
+            $("#selected_tech").text($(this).text());
+            $("#selected_tech").attr('entityId', $(this).attr('id').replace("entity_", ""));
+
+            $.get("/GuildTech/GetFilter", { id: $(this).attr('id').replace("entity_", "") }, function (data) {
+                $("#filter").empty();
+                $(data).appendTo($("#filter"));
+            }); 
+        });
+    });
+</script>

@@ -1,0 +1,55 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+@using MOEWiki.DBMySQL.Models
+
+@model List<GuildSkill>
+
+@{
+    ViewData["Title"] = "GuildSkills";
+}
+
+<div>
+    <div id="selected_skill" value="0">Select skill to start calculate.</div>
+    <hr />
+    <div id="filter"></div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        @foreach (var type in Model.Select(s => s.Skill).Distinct().OrderBy(o => o))
+        {
+            var c = "nav-link" + (type == GuildSkillEnum.GuildBattle ? " active" : "");
+            <li class="nav-item" role="presentation">
+                <button class="@c" id="@type-tab" data-bs-toggle="tab" data-bs-target="#@type-tab-pane" type="button" role="tab" aria-controls="@type-tab-pane" aria-selected="true">@(((GuildSkillEnum)type).AsString(EnumFormat.Description))</button>
+            </li>
+        }
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        @foreach (var type in Model.Select(s => s.Skill).Distinct().OrderBy(o => o))
+        {
+            var c = "tab-pane fade" + (type == GuildSkillEnum.GuildBattle ? " show active" : "");
+            <div class="@c" id="@type-tab-pane" role="tabpanel" aria-labelledby="@type-tab" tabindex="0">
+                @Html.Partial("/Views/GuildSkill/_TabContent.cshtml", Model.Where(w => w.Skill == type).ToList())
+            </div>
+        }
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.perk').click(function () {
+            var tt = $('#' + $(this).attr('id').replace("entity", "tooltip"));
+            if ($(tt).css("display") == "none") {
+                $(".tree-item-tooltip").css("display", "none");
+                $(tt).css("display", "block");
+            } else {
+                $(".tree-item-tooltip").css("display", "none");
+            }
+            $("#selected_skill").text($(this).text());
+
+            $.get("/GuildSkill/GetFilter", { id: $(this).attr('id').replace("entity_", "") }, function (data) {
+                $("#filter").empty();
+                $(data).appendTo($("#filter"));
+            }); 
+        });
+        $('#entity_' + @ViewBag.Id).trigger("click");
+    });
+</script>

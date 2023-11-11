@@ -1,0 +1,34 @@
+﻿@using MOEWiki.DBMySQL.Models
+
+@model List<Category>
+<div class="poster border border-2 border-danger">
+    Due to the poor readiness of the translation of the game presented in the test version, updating the knowledge base to version 1.0 will be completed after the release of this version.
+</div>
+<div class="accordion" id="accordion1">
+    @foreach (var cat in Model.Where(w => w.Subcategories.Any(w => !w.IsDelete)))
+    {
+        <div class="accordion-item mb-1">
+            <h2 class="accordion-header">
+                <button class="accordion-button item-index" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@cat.Name" aria-expanded="true" aria-controls="collapse_@cat.Name">
+                    @cat.Name
+                </button>
+            </h2>
+            <div id="collapse_@cat.Name" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <div class="container text-center">
+                        <div class="row">
+                            @foreach (var item in cat.Subcategories.Where(w => !w.IsDelete).OrderBy(o => o.Name))
+                            {
+                                <div class="col col-12 col-sm-4	col-md-2 col-lg-2 col-xl-2">
+                                    <div class="px-2 pb-2">
+                                        <a href="/Item/List/?subcategoryId=@item.Id">@item.Name</a>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,42 @@
+﻿@using MoeWiki.WebApp.Models.GuildTech
+@using MOEWiki.DBMySQL.Enums
+@using System.Globalization
+
+@model List<TechItem>
+
+@{
+    Layout = null;
+}
+
+<table>
+    <tr>
+        <th></th>
+        <th>Actvity</th>
+        <th>Copper Coins</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Text</td>
+            <td class="text-center">
+                @item.ActReq.ToString("N0",
+                         CultureInfo.CreateSpecificCulture("sv-SE"))
+            </td>
+            <td class="text-center">
+                @item.CoinsReq.ToString("N0",
+                         CultureInfo.CreateSpecificCulture("sv-SE"))
+            </td>
+        </tr>        
+    }
+    <tr>
+        <td>Summary</td>
+        <td class="text-center">
+            @Model.Sum(s => s.ActReq).ToString("N0",
+                     CultureInfo.CreateSpecificCulture("sv-SE"))
+        </td>
+        <td class="text-center">
+            @Model.Sum(s => s.CoinsReq).ToString("N0",
+                     CultureInfo.CreateSpecificCulture("sv-SE"))
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MOE Wiki</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/MoeWiki.WebApp.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/jquery-ui/dist/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-ui/dist/jquery-ui.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <style>
+    </style>
+</head>
+<body id="body1">
+    <header id="header1">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MOE Wiki</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Calculators/Tools
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Calculator/CraftIndex">Craft</a></li>
+                                <li><a class="dropdown-item" href="#">Field</a></li>
+                                <li><a class="dropdown-item" href="/Calculator/Level">Level</a></li>
+                                <li><a class="dropdown-item" href="/Calculator/Skill">Skill</a></li>
+                                <li><a class="dropdown-item" href="/GuildTech/Index">Guild Tech</a></li>
+                                <li><a class="dropdown-item" href="/GuildSkill/Index">Guild Skills</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Maps
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/Map/Index/?id=1">Zhongzhou (old)</a></li>
+                                <li><a class="dropdown-item" href="/Map/Index/?id=2">Dongzhou (new)</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Item/Index">Items</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Perk/Index">Perks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Research/Index">Research</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Guide/Index">Guides</a>
+                        </li>
+                        <div class="d-flex">
+                            <input class="form-control me-2" id="searchstring" type="search" placeholder="Search" aria-label="Search">
+                            <button class="button" onclick="Search()">Search</button>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="px-5">
+        @RenderBody()
+    </div>
+@*     <div class="container">
+        <main role="main" class="pb-3">
+        </main>
+    </div> *@
+
+    <footer class="footer text-muted">
+        <div class="container">
+            &copy; 2024 - MOE Wiki.  Contact us
+                <a class="px-2" href="https://discord.gg/K9sBvFUs"><img src="/images/discord.jpg" width="30" height="30" /></a>
+                <a href="https://boosty.to/moegamepedia"><img src="/images/boosty.jpg" width="30" height="30" /></a>
+        </div>
+    </footer>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Brimstone_svg" data-name="Brimstone" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 713.07 846.61">
+  <defs>
+    <style>
+		.cls-1 {
+		fill: #FBFF61;
+		fill-opacity: 0.4;
+		stroke: #FBFF61;
+		stroke-width: 5px;
+		}
+	</style>
+  </defs>
+  <g id="brimstone_g">
+    <path class="cls-1" d="M409.33,843.89l-39.33-21.33-53.33,6-45.33-14.67-20-26.67-48.67-32.67-25.33-50-63.33-38.67-14-58.67L3.33,509.89,3,3.14"/>
+    <polyline class="cls-1" points="408.67 843.67 456.67 834.33 466 779 453.33 733.67 468.67 678.33 540.67 705.67 572 702.33 620 712.33 696 630.33 710 496.33 683.33 434.33 647.33 397 661.33 344.33 633.33 247 637.33 187.67 675.33 135.67 656 107 655.83 3 3 3.14"/>
+  </g>
+</svg>

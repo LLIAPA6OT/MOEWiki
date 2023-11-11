@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Cold_svg" data-name="Cold" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 426.38 384.09">
+  <defs>
+    <style>
+		.cls-1 {
+		fill: #80FFF8;
+		fill-opacity: 0.4;
+		stroke: #80FFF8;
+		stroke-width: 5px;
+		}
+	</style>
+  </defs>
+  <g id="Cold_g">
+    <polygon class="cls-1" points="3.15 3.2 88.81 8.36 138.15 20.2 205.98 39.86 262.65 68.36 316.15 105.36 370.65 147.03 417.98 203.03 423.31 276.86 400.31 308.36 359.65 356.7 283.48 381.03 182.15 368.64 147.03 312.2 119.03 275.31 86.59 229.53 54.15 194.42 11.92 141.53 7.03 90.42 3.15 3.2"/>
+  </g>
+</svg>

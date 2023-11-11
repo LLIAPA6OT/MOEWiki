@@ -1,0 +1,149 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+
+@model List<Perk>
+@{
+    Layout = null;
+}
+
+@{
+    var head = "";
+    var width = 230;
+    var height = 60;
+    var intervalW = 40;
+    var intervalH = 10;
+    var widthpx = $"{width - intervalW}px";
+    var heightpx = $"{height - intervalH}px";
+    var skills = Model.Select(s => s.Skill).Distinct().OrderBy(o => o);
+    switch (skills.First())
+    {
+        case SkillEnum.OneHanded:
+            head = "strength";
+            break;
+        case SkillEnum.Bow:
+            head = "agility";
+            break;
+        case SkillEnum.Physique:
+            head = "physique";
+            break;
+        case SkillEnum.Craft:
+            head = "inteiligence";
+            break;
+        case SkillEnum.Command:
+            head = "charisma";
+            break;
+    }
+    <ul class="nav nav-tabs" id="myTab@{head.ToString();}" role="tablist">
+        @foreach (var s in skills)
+        {
+            var c = "nav-item";
+            var bc = "nav-link";
+            if (s == skills.First())
+            {
+                c += " active";
+                bc += " active";
+            }
+            <li class="@c" role="presentation">
+                <button class="@bc" id="@s-tab" data-bs-toggle="tab" data-bs-target="#@s-tab-pane" type="button" role="tab" aria-controls="@s-tab-pane" aria-selected="true">@(((SkillEnum)s).AsString(EnumFormat.Description))</button>
+            </li>
+        }
+    </ul>
+
+    <div class="tab-content" id="myTab@{head.ToString();}Content">
+        @foreach (var s in skills)
+        {
+            var cc = "tab-pane fade";
+            if (s == skills.First()) cc += " show active";
+            <div class="@cc" id="@s-tab-pane" role="tabpanel" aria-labelledby="@s-tab" tabindex="@{((int)s).ToString();}">
+                <div>
+                    @{
+                        var list = Model.Where(w => w.Skill == s).ToList();
+                        var maxRow = list.Select(s => s.Row).Max(m => m);
+                        var levels = new Dictionary<int, int>();
+                        var v = 0;
+                        foreach (var l in list.Select(s => s.Level).Distinct().OrderBy(o => o))
+                        {
+                            levels.Add(l, v);
+                            v++;
+                        }
+                        var contWidth = $"{levels.Count * width}px";
+                        <div class="position-relative" style="height: 75vh;width: 100%; overflow-x: scroll">
+                            @foreach (var l in levels.Keys)
+                            {
+                                var left = $"{levels[l] * width}px";
+                                var top = $"{maxRow * height}px";
+                                <div style="text-align: center; position: absolute; left: @left; top: @top; width: @widthpx; height: @heightpx;">
+                                    @l.ToString()
+                                </div>
+                                v++;
+                            }
+                            @foreach (var perk in list)
+                            {
+                                var col = levels[perk.Level];
+                                var left = $"{col * width}px";
+                                var top = $"{(perk.Row - 1) * height}px";
+                                var parents = perk.PreviousId != null && perk.PreviousId != 0 ? $"{perk.PreviousId}" : "";
+                                <div class="perk border" id="entity_@perk.Id" row="@perk.Row" col="@(col + 1)" data-parents="[@parents]"
+                                style="text-align: center; position: absolute; left: @left; top: @top; width: @widthpx; height: @heightpx;">
+                                    @perk.Name
+                                </div>
+                                var topP = $"{perk.Row * height - intervalH}px";
+                                <div class="align-items-start border" id="tooltip_@perk.Id" style="text-align: center; position: absolute; left: @left; top: @topP; width: @widthpx; height: @heightpx; display: none; opacity: 1!important; background-color: white!important; z-index: 101">
+                                    <div class="px-1 tree-elem-content">@perk.Description</div>
+                                    <div class="d-flex tree-elem">
+                                        <div class="px-1 tree-elem-content flex-grow-1">Skill Level</div>
+                                        <div class="px-1 tree-elem-content">@perk.SkillLevel</div>
+                                    </div>
+                                    <div class="d-flex tree-elem">
+                                        <div class="px-1 tree-elem-content flex-grow-1">Level</div>
+                                        <div class="px-1 tree-elem-content">@perk.Level</div>
+                                    </div>
+                                    @if (perk.ComprehensionPoint != 0)
+                                    {
+                                        <div class="d-flex tree-elem">
+                                            <div class="px-1 tree-elem-content flex-grow-1">Comprehension Point</div>
+                                            <div class="px-1 tree-elem-content">@perk.ComprehensionPoint</div>
+                                        </div>
+                                    }
+                                    @if (perk.CopperCoins != 0)
+                                    {
+                                        <div class="d-flex tree-elem">
+                                            <div class="px-1 tree-elem-content flex-grow-1">Copper Coins</div>
+                                            <div class="px-1 tree-elem-content">@perk.CopperCoins</div>
+                                        </div>
+                                    }
+                                    @if (perk.RequiredItemId != 0)
+                                    {
+                                        <div class="d-flex tree-elem">
+                                            <a class="px-1 tree-elem-content" href="/Item/Details/?id=@perk.RequiredItemId" target="_blank">@perk.RequiredItemName</a>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+            </div>
+        }
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('.perk').each(function () {
+            if ($(this).data('parents').length > 0) {
+                DrawConnect($(this).attr('id'), $(this).data('parents'), @width, @height, @intervalW, @intervalH);
+            }
+        });
+        $('.perk').click(function () {
+            var tt = $('#' + $(this).attr('id').replace("entity", "tooltip"));
+            if ($(tt).css("display") == "none") {
+                $(tt).css("display", "block");
+            } else {
+                $(tt).css("display", "none");
+            }
+        });
+    });
+</script>

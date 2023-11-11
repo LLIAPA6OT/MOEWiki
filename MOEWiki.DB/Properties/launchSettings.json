@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "MOEWiki.DB": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:3363;http://localhost:3364"
+    }
+  }
+}

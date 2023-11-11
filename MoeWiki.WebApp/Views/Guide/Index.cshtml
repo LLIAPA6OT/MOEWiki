@@ -1,0 +1,48 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+@using MOEWiki.DBMySQL.Models
+
+@model List<Research>
+
+@{
+    ViewData["Title"] = "Guides";
+}
+
+<div>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="basemechanics" data-bs-toggle="tab" data-bs-target="#basemechanics-tab-pane" type="button" role="tab" aria-controls="basemechanics-tab-pane" aria-selected="true">Base Mechanics</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tricks" data-bs-toggle="tab" data-bs-target="#tricks-tab-pane" type="button" role="tab" aria-controls="tricks-tab-pane" aria-selected="true">Tricks/Abuses</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="basemechanics-tab-pane" role="tabpanel" aria-labelledby="basemechanics-tab" tabindex="0">
+            <div class="guide"><a href="/StaticPage/Page/1">1. All palnts and seed guide</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">2. Fields guide</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">3. Optimal resource collecting guide</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">4. Where find all talent books</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">5. All locations of rare chests</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">6. Warriors taming guide</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">7. Where find armour scrolls</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">8. How levelup command in AFK</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">9. Where find Incomplete Book of Quench</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">10. How to kill Lvl 60 Boss in winter stronghold without damage</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">11. Copper coins auto farm with special warriors</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">12. How to kill Alpha bear without damage</a></div>
+            <div class="guide"><a href="/StaticPage/Page/3">13. Horse taming guide</a></div>
+        </div>
+        <div class="tab-pane fade" id="tricks-tab-pane" role="tabpanel" aria-labelledby="tricks-tab" tabindex="1">
+            <div class="guide"><a href="/StaticPage/Page/2">1. How to save a horse from damage when falling from a great height</a></div>
+            <div class="guide"><a href="https://boosty.to/moegamepedia/posts/e250d4d7-6bdc-429c-9169-66d555a71d46?share=post_link">2. Seeing through walls</a></div>
+            <div class="guide"><a href="https://boosty.to/moegamepedia/posts/8a787774-6657-467c-81f5-ccbfae435996?share=post_link">3. Loot transfer through walls</a></div>
+            <div class="guide"><a href="/StaticPage/Page/2">4. Flight without special equipments</a></div>
+            <div class="guide"><a href="/StaticPage/Page/2">5. Shooting at towers without retaliatory damage</a></div>
+            <div class="guide"><a href="https://boosty.to/moegamepedia/posts/7df29301-6862-4cc0-834a-5edd0e35ab88?share=post_link">6. Dragging heavy loot</a></div>
+            <div class="guide"><a href="/StaticPage/Page/2">7. Seeing through vegetation over long distances</a></div>
+            <div class="guide"><a href="https://boosty.to/moegamepedia/posts/af66d7a5-9f5f-4ccf-94f3-6af91d7af3e8?share=post_link">8. Loot lifting</a></div>
+            @* <div class="guide"><a href="">9. Fast level up warriors siege skill</a></div> *@
+        </div>
+    </div>
+</div>

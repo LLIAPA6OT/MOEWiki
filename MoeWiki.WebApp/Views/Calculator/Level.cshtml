@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Level";
+}
+
+<div>
+    <div>
+        <label for="have_level">Have level:</label>
+        <br />
+        <input class="p-1" type="number" id="have_level" min="1" max="59" />
+    </div>
+    <div>
+        <label for="target_level">Target level:</label>
+        <br />
+        <input class="p-1" type="number" id="target_level" min="2" max="60" />
+    </div>
+    <button class="button" id="Calculate">Calculate</button>
+    <div id="result">
+    </div>
+</div>
+
+
+ <script>
+    $(document).ready(function () {
+        $('#Calculate').click(function () {
+            $('#result').text("");
+            $.post("/Calculator/CalculateLevel", { have: $("#have_level").val(), target: $("#target_level").val() }, function (data) {
+                $('#result').text(data.result);
+            });
+        });
+    });
+</script>

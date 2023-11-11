@@ -1,0 +1,24 @@
+﻿@using MOEWiki.DBMySQL.Models
+@using MoeWiki.WebApp.Models.Home
+
+@model List<Item>
+
+<div class="d-flex">
+    <input class="form-control me-2" id="searchstring2" type="search" placeholder="Find item" aria-label="Search" value="@ViewBag.SearchString">
+    <button class="button" onclick="Find()">Find</button>
+</div>
+@if (Model.Any())
+{
+    @Html.Partial("/Views/Item/_List.cshtml", Model)
+}
+else
+{
+    <div>Nothing found.</div>
+}
+<script>
+    $(document).ready(function () {
+        $(".item-link").each(function () {
+            $(this).attr("href", $(this).attr("href").replace('Item/Details', 'Calculator/CraftItem'));
+        });
+    });
+</script>

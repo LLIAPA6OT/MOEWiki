@@ -1,0 +1,226 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using EnumsNET
+@using MoeWiki.WebApp.Models.Map
+@model MapModel
+@{
+    var path = $"/images/mapicon{Model.Map.Id}/";
+    switch(Model.Type)
+    {
+        case 1:
+            ViewData["Title"] = "Map - " + Model.Map.Name;
+            break;
+        case 2:
+            ViewData["Title"] = Model.MarkerGroup.Name;
+            break;
+        case 3:
+            ViewData["Title"] = Model.MapZone.Name;
+            break;
+    }
+}
+<link rel="stylesheet" href="~/lib/leaflet/dist/leaflet.css" />
+<script src="~/lib/leaflet/dist/leaflet.js"></script>
+
+@if (Model.Type == 1)
+{
+    <div id="panel" class="panel">
+    <div class="panel_buttons" id="filter_buttons">
+        <button id="enable_all" class="button">Enable all</button>
+        <button id="disable_all" class="button">Disable all</button>
+    </div>
+    @{
+        foreach (var type in Enum.GetValues(typeof(MarkerTypeEnum)).Cast<MarkerTypeEnum>())
+        {
+                var names = Model.MapMarkers.Where(w => w.MarkerType == type).Select(s => new { Name = s.Name, Icon = s.ImageName }).GroupBy(g => g.Name);
+            if (names.Any())
+            {
+                <h2 style="text-align: center">@type.AsString(EnumFormat.Description)</h2>
+                foreach (var v in names)
+                {
+                    <div class="d-flex mb-1">
+                        <div class="ms-2"><input class="checkbox" type="checkbox" id="@v.Key"></div>
+                        <div class="ms-1"><label for="@v.Key">@v.Key.Replace(" Coalition", "")</label></div>
+                        <div class="ms-auto me-3"> <img style="width:1.4em" src="@path@v.First().Icon"></div>                       
+                    </div>
+                }
+            }
+        }
+        var zones = Model.MapZones.Where(w => !w.IsDelete && !w.IsHidden).ToList();
+        if (zones.Any())
+        {
+            <h2 style="text-align: center">Zones</h2>
+            foreach (var v in zones)
+            {
+                <div class="d-flex mb-1">
+                    <div class="ms-2"><input class="checkbox" type="checkbox" id="@v.Name"></div>
+                    <div class="ms-1"><label for="@v.Name">@v.Name</label></div>
+                </div>
+            }            
+        }
+    }
+    </div>
+} else if (Model.Type == 2)
+{
+    <div>@Model.MarkerGroup.Description</div>
+    <a href="/Map/Index/" + @Model.Map.Id>Open full map</a>
+}else if (Model.Type == 3)
+{
+    <div class="position-absolute" style="width: 20%; z-index:9999;">
+        <div>@Model.MapZone.Description</div>
+        <a href="/Map/Index/" + @Model.Map.Id>Open full map</a>
+    </div>
+}
+
+<div id="map"></div>
+<div class="d-flex flex-row-reverse">
+    <b id="coords">(0,0)</b>
+</div>
+
+
+
+<script type='text/javascript'>
+    var w = @Model.Map.W;
+    var h = @Model.Map.H;
+    var minX = @Model.Map.MinX;
+    var maxX = @Model.Map.MaxX;
+    var minY = @Model.Map.MinY;
+    var maxY = @Model.Map.MaxY;
+
+    $(document).ready(function () {
+        var format = 'png';
+        if (@Model.Map.Id == 1) {
+            format = 'jpg';
+        }
+        var crs = L.CRS.Simple;
+        crs.transformation = new L.Transformation(w / 16 / (maxX - minX) * @Model.Map.Id, w / 16 / (maxX - minX) * (-minX) * @Model.Map.Id, -w / 16 / (maxY - minY) * @Model.Map.Id, w / 16 / (maxY - minY) * (-minY) * @Model.Map.Id);
+        var map = L.map('map', {
+            crs: crs,
+            attributionControl: false,
+            zoomControl: false
+        }).setView([0, 0], 2);
+
+        L.tileLayer('/images/map' + @Model.Map.Id + '/{z}-{x}-{y}.' + format, {
+            maxZoom: 6,
+            minZoom: 2,
+            continuousWorld: true,
+            noWrap: true
+        }).addTo(map);
+
+        map.addEventListener('mousemove', function (ev) {
+            $('#coords').text('(' + Math.round(ev.latlng.lng) + ',' + Math.round(-ev.latlng.lat) + ')');
+        });
+        if (@Model.Type == 1 || @Model.Type == 2) {
+            var markers = @Html.Raw(Json.Serialize(Model.MapMarkers));
+            $(markers).each(function (index, element) {
+                L.marker([TY(element.y, maxY, minY, h), TX(element.x, maxX, minX, w)], {
+                icon: L.icon({
+                    iconUrl: '@path'+element.imageName,
+                    iconSize: [56, 56],
+                    iconAnchor: [28, 28],
+                    popupAnchor: [0, 0],
+                }),
+                    title: element.title,
+                    alt: element.name
+                }).addTo(map).bindPopup(element.popup);
+            });
+            if (@Model.Type == 1) {
+                $('input:checkbox:not(:checked)').each(function () {
+                    ShowHideMarkers($(this).attr('id'), 'none');
+                });
+            }
+            $('.leaflet-marker-icon').each(function () {
+                $(this).attr('data-bs-toggle', "tooltip").attr('data-bs-placement', "right").attr('data-bs-title', $(this).attr('title'));
+                $(this).removeAttr('title');
+                if ($(this).attr("alt").endsWith("Coalition")) { 
+                    $(this).addClass("coailition-icon");
+                }
+            });
+            ResizeMarkers(20, -10);
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+            $('#enable_all').click(function () {
+                $('body input:checkbox').prop('checked', true);
+                $('input:checkbox:checked').each(function () {
+                    ShowHideMarkers($(this).attr('id'), 'block');
+                });
+            });
+            $('#disable_all').click(function () {
+                $('body input:checkbox').prop('checked', false);
+                $('input:checkbox:not(:checked)').each(function () {
+                    ShowHideMarkers($(this).attr('id'), 'none');
+                });
+            });
+            $('input[type="checkbox"]').on('change', function () {
+                if ($(this).is(':checked')) {
+                    ShowHideMarkers($(this).attr('id'), 'block');
+                } else {
+                    ShowHideMarkers($(this).attr('id'), 'none');
+                }
+            });
+
+            map.on('zoomend', function () {
+                switch (map.getZoom()) {
+                    case 2:
+                        ResizeMarkers(20, -10);
+                        break;
+                    case 3:
+                        ResizeMarkers(30, -15);
+                        break;
+                    case 4:
+                        ResizeMarkers(40, -20);
+                        break;
+                    case 5:
+                        ResizeMarkers(60, -30);
+                        break;
+                    case 6:
+                        ResizeMarkers(100, -50);
+                        break;
+                    case 7:
+                        ResizeMarkers(200, -100);
+                        break;
+                };
+            });
+        }
+        if (@Model.Type == 1 || @Model.Type == 3) {
+            var zones = @Html.Raw(Json.Serialize(Model.MapZones));
+            $(zones).each(function (index, element) {
+                imageBounds = [
+                    [TY(element.iY, maxY, minY, h), TX(element.iX, maxX, minX, w)],
+                    [TY(element.aY, maxY, minY, h), TX(element.aX, maxX, minX, w)]
+                ];
+                L.imageOverlay(element.imageName, imageBounds).addTo(map);
+
+                if (@Model.Type == 1) {
+                    $('img[src="' + element.imageName + '"]').attr('alt', element.name).css('display', 'none')
+                }
+            });
+        }
+
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@* <div class="text-center">
+    <input type="text" id="searchstring"/> 
+    <button onclick="Search()">Search</button>
+</div>
+ *@
+
+@* <script>
+    // function Search() { 
+    //     window.location.href = '/Home/SearchResult/?searchString=' + $('#searchstring').val();
+    // }
+</script> *@

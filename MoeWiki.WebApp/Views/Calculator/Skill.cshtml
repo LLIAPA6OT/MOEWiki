@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Skill";
+}
+
+<div class="d-flex flex-column mb-3">
+    <div class="p-2"><p id="rng">Skill range:</p></div>
+    <div class="p-2"><div id="slider_range"></div></div>
+    <div class="p-2 position-relative">
+        <span style="position: absolute; left:0.2%">0</span>
+        <span style="position: absolute; left:16.2%">150</span>
+        <span style="position: absolute; left:32.6%">300</span>
+        <span style="position: absolute; left:49.2%">450</span>
+        <span style="position: absolute; left:65.7%">600</span>
+        <span style="position: absolute; left:82.3%">750</span>
+        <span style="position: absolute; left:98.5%">900</span>
+    </div>
+    <div class="p-4"><button id="Calculate">Calculate</button></div>
+    <div class="p-2">
+        <div id="result">
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#slider_range").slider({
+            range: true,
+            min: 0,
+            max: 900,
+            values: [450, 600],
+            step: 75,
+            slide: function (event, ui) {
+                $("#rng").text("Skill range: " + ui.values[0] + " - " + ui.values[1]);
+            }
+        });
+        $("#rng").text("Skill range: " + $("#slider_range").slider("values", 0) +
+            " - " + $("#slider_range").slider("values", 1));
+        $('#Calculate').click(function () {
+            $('#result').text("");
+            $.post("/Calculator/CalculateSkill", { have: $("#slider_range").slider("values", 0), target: $("#slider_range").slider("values", 1) }, function (data) {
+                $('#result').text(data.result);
+            });
+        });
+    });
+</script>

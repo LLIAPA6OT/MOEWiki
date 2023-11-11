@@ -1,0 +1,62 @@
+﻿@using MOEWiki.DBMySQL.Models
+
+@model Item
+
+<div>
+    <div>
+        <p>Craft: @Model.Name</p>
+    </div>
+
+    <div class="accordion accordion-flush" id="accordion1">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-cost" aria-expanded="false" aria-controls="flush-cost">
+                    Cost
+                </button>
+            </h2>
+            <div id="flush-cost" class="accordion-collapse collapse" data-bs-parent="#accordion1">
+                @Html.Partial("/Views/Item/_Cost.cshtml", Model.ItemRecipes)
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-primitive" aria-expanded="false" aria-controls="flush-primitive">
+                    Cost in primitive
+                </button>
+            </h2>
+            <div id="flush-primitive" class="accordion-collapse collapse empty" data-bs-parent="#accordion1">
+            </div>
+        </div>
+    </div>
+    <div>
+        <label for="count">Count:</label>
+        <br />
+        <input type="number" id="count" min="1" max="10000" />
+    </div>
+    <button id="Calculate">Calculate</button>
+    <div id="result">
+    </div>
+</div>
+
+
+ <script>
+    $(document).ready(function () {
+
+        $('.accordion-button').click(function () {
+            var accbody = $($(this).data('bs-target'));
+            if ($(accbody).hasClass("empty")) {
+                var url = "/Item/GetPrimitive";
+                $.get(url, { id: @Model.Id }, function (data) {
+                    $(data).appendTo($(accbody));
+                    $(accbody).removeClass("empty");
+                });
+            }
+        });
+        $('#Calculate').click(function () {
+            $('#result').empty();
+            $.post("/Calculator/CalculateCraft", { id: @Model.Id, count: $("#count").val() }, function (data) {
+                $(data).appendTo($('#result'));
+            });
+        });
+    });
+</script>

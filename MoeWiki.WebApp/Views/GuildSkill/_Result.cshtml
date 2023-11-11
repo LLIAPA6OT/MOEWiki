@@ -1,0 +1,66 @@
+﻿@using MoeWiki.WebApp.Models.GuildSkill
+@using MOEWiki.DBMySQL.Enums
+@using System.Globalization
+
+@model List<ReqItem>
+
+@{
+    Layout = null;
+}
+<style>
+    td {
+        text-align: center;
+    }
+</style>
+
+<table>
+    <tr>
+        <th></th>
+        <th>Have</th>
+        <th>Target</th>
+        <th>Actvity</th>
+        <th>Copper Coins</th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Text</td>
+            <td>@item.HaveLvl</td>
+            <td>@item.ReqLvl</td>
+            <td>
+                @item.ActReq.ToString("N0",
+                         CultureInfo.CreateSpecificCulture("sv-SE"))
+            </td>
+            <td>
+                @item.CoinsReq.ToString("N0",
+                         CultureInfo.CreateSpecificCulture("sv-SE"))
+            </td>
+        </tr>        
+    }
+    <tr>
+        <td>Summary</td>
+        <td></td>
+        <td></td>
+        <td>
+            @Model.Sum(s => s.ActReq).ToString("N0",
+                     CultureInfo.CreateSpecificCulture("sv-SE"))
+        </td>
+        <td>
+            @Model.Sum(s => s.CoinsReq).ToString("N0",
+                     CultureInfo.CreateSpecificCulture("sv-SE"))
+        </td>
+    </tr>
+    <tr>
+        <td>Summary without Guild Level</td>
+        <td></td>
+        <td></td>
+        <td>
+            @Model.Where(w => w.Text != "Guild Level").Sum(s => s.ActReq).ToString("N0",
+                     CultureInfo.CreateSpecificCulture("sv-SE"))
+        </td>
+        <td>
+            @Model.Where(w => w.Text != "Guild Level").Sum(s => s.CoinsReq).ToString("N0",
+                     CultureInfo.CreateSpecificCulture("sv-SE"))
+        </td>
+    </tr>
+</table>

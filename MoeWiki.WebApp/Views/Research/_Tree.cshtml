@@ -1,0 +1,105 @@
+﻿@using MOEWiki.DBMySQL.Models
+
+@model List<Research>
+
+@{
+    Layout = null;
+}
+
+<div>
+    @{
+        var path = "/images/icon/";
+        var width = 250;
+        var height = 65;
+        var intervalW = 50;
+        var imgSize = 20;
+        var intervalH = 5;
+        var maxItems = Model.Select(s => s.Items.Count()).Max();
+        
+        var widthpx = $"{width - intervalW}px";
+        var heightpx = $"{height - intervalH}px";
+        <div class="position-relative" style="height: 75vh;width: 100%; overflow-x: scroll">
+            @foreach (var research in Model)
+            {
+                var left = $"{(research.Column - 1) * width}px";
+                var top = $"{(research.Row - 1) * height}px";
+                var parents = research.PreviousId != null && research.PreviousId != 0 ? $"{research.PreviousId}" : "";
+                <div class="research border" id="entity_@research.Id" row="@research.Row" col="@research.Column" data-parents="[@parents]"
+                     style="text-align: center; position: absolute; left: @left; top: @top; width: @widthpx; height: @heightpx;">
+                    <div class="tree-header research-child">
+                        [@research.Level] @research.Name
+                    </div>
+                    @if (research.Items.Any(a => !a.IsDelete))
+                    {
+                        <div class="d-flex tree-elem border-top research-child">
+                            @foreach (var item in research.Items.Where(a => !a.IsDelete))
+                            {
+                                <a class="p-1" href="/Item/Details/?id=@item.Id" target="_blank"><img class="item" tooltipId="tooltip_@item.Id" title="@item.Name" src="@path@item.ImageName" width="@imgSize" height="@imgSize" /></a>
+                                <div id="tooltip_@item.Id" style="display: none">
+                                    <b>@item.Name</b>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+                var topP = $"{research.Row * height - intervalH}px";
+                <div class="align-items-start border" id="info_@research.Id" style="text-align: center; position: absolute; left: @left; top: @topP; width: @widthpx; height: @heightpx; display: none; opacity: 1!important; background-color: white!important; z-index: 101">
+                    <div class="d-flex tree-elem">
+                        <div class="p-2 tree-elem-content flex-grow-1">Level</div>
+                        <div class="p-2 tree-elem-content">@research.Level</div>
+                    </div>
+                    @if (research.GuildLevel != 0)
+                    {
+                        <div class="d-flex tree-elem">
+                            <div class="p-2 tree-elem-content flex-grow-1">Guild Level</div>
+                            <div class="p-2 tree-elem-content">@research.GuildLevel</div>
+                        </div>
+                    }
+                    @if (research.GuildActivity != 0)
+                    {
+                        <div class="d-flex tree-elem">
+                            <div class="p-2 tree-elem-content flex-grow-1">Guild Activity</div>
+                            <div class="p-2 tree-elem-content">@research.GuildActivity</div>
+                        </div>
+                    }
+                    @if (research.RecipePoint != 0)
+                    {
+                        <div class="d-flex tree-elem">
+                            <div class="p-2 tree-elem-content flex-grow-1">Recipe Point</div>
+                            <div class="p-2 tree-elem-content">@research.RecipePoint</div>
+                        </div>
+                    }
+                    @if (research.CopperCoins != 0)
+                    {
+                        <div class="d-flex tree-elem">
+                            <div class="p-2 tree-elem-content flex-grow-1">Copper Coins</div>
+                            <div class="p-2 tree-elem-content">@research.CopperCoins</div>
+                        </div>
+                    }
+                    @if (research.RequiredItemId != 0)
+                    {
+                        <div class="d-flex tree-elem">
+                            <a href="/Item/Details/?id=@research.RequiredItemId" target="_blank">@research.RequiredItemName @research.RequiredItemCount</a>
+                        </div>
+                    }
+                    <div class="p-2 tree-elem-content">@research.Description</div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $(".item").each(function () {
+            $(this).tooltip({
+            });
+        });
+        $('.research').each(function () {
+            if ($(this).data('parents').length > 0) {
+                DrawConnect($(this).attr('id'), $(this).data('parents'), @width, @height, @intervalW, @intervalH);
+            }
+        });
+    });
+</script>

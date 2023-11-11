@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Miasma_svg" data-name="Miasma" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 297.53 338.28">
+  <defs>
+    <style>
+		.cls-1 {
+		fill: #61FF53;
+		fill-opacity: 0.4;
+		stroke: #61FF53;
+		stroke-width: 5px;
+		}
+	</style>
+  </defs>
+  <g id="Miasma_g">
+    <polygon class="cls-1" points="60.81 22.29 102.47 3.29 133.47 17.29 268.14 153.63 288.64 205.63 294.47 291.96 269.14 334.96 21.14 290.29 3.14 53.63 60.81 22.29"/>
+  </g>
+</svg>
