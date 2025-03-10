@@ -54,6 +54,14 @@ namespace MOEWiki.DBMySQL.Gateways
             using (var _context = new ApplicationContext(options))
                 return _context.items.AsNoTracking().Where(w => !w.IsDelete).ToList();
         }
+        public IEnumerable<Item> GetByTopWeaponFilter(int[] subcats, string[] levels)
+        {
+            using (var _context = new ApplicationContext(options))
+                return _context.items.AsNoTracking().Where(w => !w.IsDelete && subcats.Contains(w.SubcategoryId))
+                    .Include(i => i.Subcategory)
+                    .Include(i => i.ItemProperties).ThenInclude(t => t.Property).Where(w => w.ItemProperties.Any(a => a.Name == "Level" && levels.Contains(a.Value)))
+                    .ToList();
+        }
         public IEnumerable<Item> GetAllByResearchId(int id)
         {
             using (var _context = new ApplicationContext(options))

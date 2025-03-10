@@ -1,0 +1,215 @@
+﻿@using MOEWiki.DBMySQL.Enums
+@using MoeWiki.WebApp.Models.Item
+
+@model List<SubCat>
+@{
+    var activeTab = "Meele";
+    var names = Model.Select(s => s.ActiveTab).Distinct();
+    var qualityList = Enum.GetValues(typeof(QualityEnum)).Cast<QualityEnum>().ToList();
+
+}
+<ul class="nav mt-2 nav-tabs item-prop-bgc" id="myTab" role="tablist">
+
+    @foreach (var q in names)
+    {
+        var c = "nav-link" + (q == activeTab ? " active" : "");
+        <li class="nav-item" role="presentation">
+            <button class="@c" id="@q-tab" data-bs-toggle="tab" data-bs-target="#@q-tab-pane" type="button" role="tab" aria-controls="@q-tab-pane" aria-selected="true">@q</button>
+        </li>
+    }
+</ul>
+<div class="tab-content item-prop-bgc" id="myTabContent">
+    @foreach (var q in names)    {
+        var c = "tab-pane fade" + (q == activeTab ? " show active" : "");
+        <div class="@c" id="@q-tab-pane" role="tabpanel" aria-labelledby="@q-tab" tabindex="0">
+            <div id="@q-filter">
+                <div class="accordion" id="accordion1">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@q-filter" aria-expanded="true" aria-controls="collapse_@q-filter">
+                                Filter
+                        </button>
+                            <a style="color: red" id="@q-filter-err-text"></a>
+                        </h2>
+                        <div id="collapse_@q-filter" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <div class="d-flex">
+                                    <div class="accordion" id="accordionSubcats_@q">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@q-type" aria-expanded="true" aria-controls="collapse_@q-type">
+                                                    Type
+                                                </button>
+                                            </h2>
+                                            <div id="collapse_@q-type" class="accordion-collapse collapse show">
+                                                <div class="accordion-body">
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="d-flex mb-1">
+                                                                <div class="ms-2"><input class="chb-all" type="checkbox" name="" id="AllSubcats-@q"></div>
+                                                                <div class="ms-1"><label class="lbl-chb" for="AllSubcats-@q">All</label></div>
+                                                            </div>
+                                                            @foreach (var item in Model.Where(w => w.ActiveTab == q))
+                                                            {
+                                                                <div class="d-flex mb-1">
+                                                                    <div class="ms-2"><input type="checkbox" name="Subcats-@q" value="@item.Id" id="@item.Name@q"></div>
+                                                                    <div class="ms-1"><label for="@item.Name@q">@item.Name</label></div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion" id="accordionQualities_@q">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@q-Qual" aria-expanded="true" aria-controls="collapse_@q-Qual">
+                                                    Quality
+                                                </button>
+                                            </h2>
+                                            <div id="collapse_@q-Qual" class="accordion-collapse collapse show">
+                                                <div class="accordion-body">
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="d-flex mb-1">
+                                                                <div class="ms-2"><input class="chb-all" type="checkbox" name="" id="AllQual-@q"></div>
+                                                                <div class="ms-1"><label class="lbl-chb" for="AllQual-@q">All</label></div>
+                                                            </div>
+                                                            @foreach (var item in qualityList)
+                                                            {
+                                                                <div class="d-flex mb-1">
+                                                                    <div class="ms-2"><input type="checkbox" name="Qual-@q" value="@item" id="@item@q"></div>
+                                                                    <div class="ms-1"><label for="@item@q">@item</label></div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion" id="accordionLevels_@q">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@q-Lvl" aria-expanded="true" aria-controls="collapse_@q-Lvl">
+                                                    Level
+                                                </button>
+                                            </h2>
+                                            <div id="collapse_@q-Lvl" class="accordion-collapse collapse show">
+                                                <div class="accordion-body">
+                                                    <div class="container text-center">
+                                                        <div class="row">
+                                                            <div class="d-flex mb-1">
+                                                                <div class="ms-2"><input class="chb-all" type="checkbox" name="" id="AllLevels-@q"></div>
+                                                                <div class="ms-1"><label class="lbl-chb" for="AllLevels-@q">All</label></div>
+                                                            </div>
+                                                            @{
+                                                                var lvls = new List<string>() { "51", "60" };
+                                                                if (q == "Armor")
+                                                                {
+                                                                    lvls = new List<string>() { "50", "51", "55", "60" };
+                                                                }
+                                                                foreach (var item in lvls)
+                                                                {                                                                
+                                                                    <div class="d-flex mb-1">
+                                                                        <div class="ms-2"><input type="checkbox" name="Levels-@q" value="@item" id="@item@q"></div>
+                                                                        <div class="ms-1"><label for="@item@q">@item</label></div>
+                                                                    </div>
+                                                                }                                                                
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="bshow" id="show_@q">Show</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="content_@q"></div>
+        </div>
+    }
+</div>
+
+
+<script>
+    var activeTab = "Meele";
+    var OrderBy = "";
+    var Desc = true;
+    function checkAll(chbId) {
+        $("input[name = '" + chbId.replace('All', '') + "']").prop('checked', $('#' + chbId).is(':checked'));
+    }
+
+    $(document).ready(function () {
+        $('.nav-link').click(function () {
+            activeTab = $(this).attr("id").replace("-tab", "");
+        });
+        $('.chb-all').click(function () {
+            checkAll($(this).attr("id"));
+        });
+        $('.lbl-chb').click(function () {
+            checkAll($(this).attr("for"));
+        });
+
+        $('#LowAmmo').prop('checked', true);     
+        $('#accordionQualities_Ammo').hide();
+
+        $('.bshow').click(function () {
+            var SubcatsIdsSelected = "";
+            var LevelsSelected = "";
+            var QualitiesSelected = "";
+            $("input:checkbox:checked").each(function () {
+                var name = $(this).attr('name');
+                if (name.endsWith(activeTab)){
+                    if (name.startsWith('Subcats-')) {
+                            SubcatsIdsSelected = SubcatsIdsSelected + $(this).val() + '|';
+                    } else if (name.startsWith('Levels-')) {
+                            LevelsSelected = LevelsSelected + $(this).val() + '|';
+                    } else if (name.startsWith('Qual-')) {
+                            QualitiesSelected = QualitiesSelected + $(this).val() + '|';
+                    }
+                }
+            });
+            if (SubcatsIdsSelected.length > 0 && LevelsSelected.length > 0 && QualitiesSelected.length > 0) {
+                $('#' + activeTab + "-filter-err-text").text('');
+                $.get(
+                    "/Item/GetTopWeapon",
+                    { s1: SubcatsIdsSelected, s2: LevelsSelected, s3: QualitiesSelected, s4: activeTab, s5: OrderBy, s6: Desc },
+                    function (data) {
+                        $('#content_' + activeTab).empty();
+                        $(data).appendTo($('#content_' + activeTab));
+                        if ($("#OrderBy" + activeTab) != null) {
+                            OrderBy = $("#OrderBy" + activeTab).attr("value");
+                        }
+                        if ($("#Desc" + activeTab) != null) {
+                            Desc = $("#Desc" + activeTab).attr("value") == "true";
+                        }
+                        $('.sortable').click(function () {
+                            if (OrderBy == $(this).attr('id')) {
+                                Desc = !Desc;
+                            } else {
+                                Desc = false;
+                                OrderBy = $(this).attr('id');
+                            }
+                            $('#show_' + activeTab).trigger("click");
+                        });
+                        if (Desc) {
+                            $('<img src="/images/static/common/down.svg" width="20" height="20"/>').appendTo($("#" + OrderBy));
+                        } else {
+                            $('<img src="/images/static/common/up.svg" width="20" height="20"/>').appendTo($("#" + OrderBy));
+                        }
+                    }
+                );
+            } else {
+                $('#' + activeTab + "-filter-err-text").text('Select at least one value in each of the filters');
+            }
+        });
+    });
+</script>

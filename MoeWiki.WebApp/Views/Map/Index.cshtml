@@ -26,18 +26,22 @@
     <div class="panel_buttons" id="filter_buttons">
         <button id="enable_all" class="button">Enable all</button>
         <button id="disable_all" class="button">Disable all</button>
+        <button id="disable_all" class="button">Add marker</button> 
     </div>
     @{
         foreach (var type in Enum.GetValues(typeof(MarkerTypeEnum)).Cast<MarkerTypeEnum>())
         {
-                var names = Model.MapMarkers.Where(w => w.MarkerType == type).Select(s => new { Name = s.Name, Icon = s.ImageName }).GroupBy(g => g.Name);
+            var names = Model.MapMarkers.Where(w => w.MarkerType == type).Select(s => new { Name = s.Name, Icon = s.ImageName }).GroupBy(g => g.Name);
             if (names.Any())
-            {
-                <h2 style="text-align: center">@type.AsString(EnumFormat.Description)</h2>
+                {
+                    <div class="d-flex mb-1  align-items-center justify-content-center">
+                        <div class="mx-2"><input class="checkbox" type="checkbox" id="@type.ToString()" alt="type"></div>
+                        <label for="@type.ToString()" class="fs-2">@type.AsString(EnumFormat.Description)</label>
+                    </div>
                 foreach (var v in names)
                 {
                     <div class="d-flex mb-1">
-                        <div class="ms-2"><input class="checkbox" type="checkbox" id="@v.Key"></div>
+                            <div class="ms-2"><input class="checkbox" type="checkbox" id="@v.Key" alt="@type.ToString()"></div>
                         <div class="ms-1"><label for="@v.Key">@v.Key.Replace(" Coalition", "")</label></div>
                         <div class="ms-auto me-3"> <img style="width:1.4em" src="@path@v.First().Icon"></div>                       
                     </div>
@@ -47,13 +51,13 @@
         var zones = Model.MapZones.Where(w => !w.IsDelete && !w.IsHidden).ToList();
         if (zones.Any())
         {
-            <h2 style="text-align: center">Zones</h2>
+                <h2 style="text-align: center">Zones</h2>
             foreach (var v in zones)
             {
-                <div class="d-flex mb-1">
-                    <div class="ms-2"><input class="checkbox" type="checkbox" id="@v.Name"></div>
-                    <div class="ms-1"><label for="@v.Name">@v.Name</label></div>
-                </div>
+                    <div class="d-flex mb-1">
+                        <div class="ms-2"><input class="checkbox" type="checkbox" id="@v.Name"></div>
+                        <div class="ms-1"><label for="@v.Name">@v.Name</label></div>
+                    </div>
             }            
         }
     }
@@ -151,7 +155,25 @@
                 });
             });
             $('input[type="checkbox"]').on('change', function () {
-                if ($(this).is(':checked')) {
+                if ($(this).attr("alt") == "type") {
+                    var type = $(this).attr('id');
+                    if ($(this).is(':checked')) {
+                        $('input:checkbox:not(:checked)').each(function () {
+                            if ($(this).attr("alt") == type) {
+                                $(this).prop('checked', true);
+                                ShowHideMarkers($(this).attr('id'), 'block');
+                            }
+                        });
+                    } else {
+                        $('input:checkbox:checked').each(function () {
+                            if ($(this).attr("alt") == type) {
+                                $(this).prop('checked', false);
+                                ShowHideMarkers($(this).attr('id'), 'none');
+                            }
+                        });
+                    }
+                }
+                else if ($(this).is(':checked')) {
                     ShowHideMarkers($(this).attr('id'), 'block');
                 } else {
                     ShowHideMarkers($(this).attr('id'), 'none');

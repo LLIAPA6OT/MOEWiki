@@ -15,7 +15,7 @@ namespace MOEWiki.DBMySQL
         public ApplicationContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationContext>();
-            optionsBuilder.UseMySql("localhost;user=root;port=3306;password=Q1w2e3r4!;database=prod1;",
+            optionsBuilder.UseMySql("server=localhost;user=root;port=3306;password=Q1w2e3r4!;database=prod1;",
                 new MySqlServerVersion(new Version(8, 0)));
 
             return new ApplicationContext(optionsBuilder.Options);

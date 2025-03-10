@@ -60,7 +60,7 @@ namespace MoeWiki.WebApp.Helpers
             var result = new List<RecipeItem>();
             foreach (var item in list)
             {
-                var newItems = GatewaysFacade.ItemRecipeGateway.GetAllByItemId(item.Id).Select(s => new RecipeItem() { Id = s.RecipeItemId, Name = s.RecipeItemName, Count = s.Count * item.Count, Number = s.Number + s.ItemId * 1000, IsStepByStep = s.IsStepByStep }).ToList();
+                var newItems = GatewaysFacade.ItemRecipeGateway.GetAllByItemId(item.Id).Select(s => new RecipeItem() { Id = s.RecipeItemId, Name = s.RecipeItemName, Count = s.Count * item.Count/s.ForQuantity, Number = s.Number + s.ItemId * 1000, IsStepByStep = s.IsStepByStep }).ToList();
                 if (newItems.Any())
                 {
                     result.AddRange(GetPrimitive(newItems));

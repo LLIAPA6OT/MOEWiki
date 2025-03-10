@@ -17,7 +17,7 @@
                     <a href="/Item/Details/?id=@ir.RecipeItemId" target="_blank">@ir.RecipeItemName</a>
                 }
             </div>
-            <div class="p-2 value-color">@irg.Select(s => s.Count).Max()</div>
+            <div class="p-2 value-color">@irg.Select(s => s.Count/s.ForQuantity).Max()</div>
         </div>
     }
     if (Model.Any(w => w.IsStepByStep))

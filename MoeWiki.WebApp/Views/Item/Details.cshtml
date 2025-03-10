@@ -1,6 +1,5 @@
 ﻿@using MOEWiki.DBMySQL.Models
 @using MOEWiki.DBMySQL.Enums
-@using MOEWiki.DBMySQL.Gateways
 
 @model Item
 @{
@@ -17,16 +16,7 @@
             <div class="d-flex align-items-start">
                 <div class="px-1 pb-1 h4">@Model.Name</div>
             </div>
-            @{
-                var openOn = GatewaysFacade.ItemGateway.GetResearchLevel(Model.Id, Model.ResearchId);
-                if (openOn != 0)
-                {
-                    <div class="d-flex align-items-start openon">
-                        <div class="px-2">Unlock on level: @openOn</div>
-                    </div>
-                }
-            }
-            @foreach (var ip in Model.ItemProperties.Where(w => w.Name == "Weight" || w.Name == "Level" || (!showQualityTabs && w.Name == "Durability")).OrderBy(o => o.SortId))
+            @foreach (var ip in Model.ItemProperties.Where(w => w.Name == "Weight" || w.Name == "Level" || (w.Name == "DLC" && w.Value != "None") || (!showQualityTabs && w.Name == "Durability") || w.Name == "Opens at level").OrderBy(o => o.SortId))
             {
                 var cl = "prop-" + ip.Name;
                 <div class="d-flex align-items-start @cl">
@@ -65,11 +55,11 @@
             }
         </div>
     }
-    @if (Model.ItemProperties.Any(w => w.Name != "Weight" && w.Name != "Level" && w.Name != "Durability" && w.Name != "Description" && (!w.Property.IsDependsByQuality || !showQualityTabs)))
+    @if (Model.ItemProperties.Any(w => w.Name != "Weight" && w.Name != "Level" && w.Name != "Durability" && w.Name != "Description" && (!w.Property.IsDependsByQuality || !showQualityTabs) && w.Name != "DLC"))
     {
         <div class="p-2 mt-1 other-attr-color item-prop-bgc">Other attributes:</div>        
     }
-    @foreach (var ip in Model.ItemProperties.Where(w => !w.Property.IsHide && w.Name != "Weight" && w.Name != "Level" && w.Name != "Durability" && (!w.Property.IsDependsByQuality || !showQualityTabs)).OrderBy(o => o.SortId))
+    @foreach (var ip in Model.ItemProperties.Where(w => !w.Property.IsHide && w.Name != "Weight" && w.Name != "Level" && w.Name != "Durability" && (!w.Property.IsDependsByQuality || !showQualityTabs) && w.Name != "DLC").OrderBy(o => o.SortId))
     {
         if (ip.Name == "Description")
         {

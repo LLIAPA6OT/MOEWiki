@@ -34,7 +34,7 @@ namespace MoeWiki.WebApp.Models.Map
             this.MapMarkers = markerGroup.MapMarkers.Where(w => !w.IsDelete && !w.IsHidden).ToList();
         }
         public MOEWiki.DBMySQL.Models.Map Map { get; set; }
-        public int Type { get; set; } = 1;
+        public int Type { get; set; } = 1; //1 - Map, 2 - MarkerGroup, 3 - MapZone
         public MapZone? MapZone { get; set; }
         public MarkerGroup? MarkerGroup { get; set; }
         public List<MapZone>? MapZones { get; set; }

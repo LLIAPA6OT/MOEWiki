@@ -1,9 +1,6 @@
 ﻿@using MOEWiki.DBMySQL.Models
 
 @model List<Category>
-<div class="poster border border-2 border-danger">
-    Due to the poor readiness of the translation of the game presented in the test version, updating the knowledge base to version 1.0 will be completed after the release of this version.
-</div>
 <div class="accordion" id="accordion1">
     @foreach (var cat in Model.Where(w => w.Subcategories.Any(w => !w.IsDelete)))
     {

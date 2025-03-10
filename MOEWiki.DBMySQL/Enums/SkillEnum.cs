@@ -37,7 +37,7 @@ namespace MOEWiki.DBMySQL.Enums
         Lumbering = 303,
         [Description("Hunt")]
         Hunt = 304,
-        [Description("Hunt")]
+        [Description("Planting")]
         Plant = 305,
         [Description("Craft")]
         Craft = 401,

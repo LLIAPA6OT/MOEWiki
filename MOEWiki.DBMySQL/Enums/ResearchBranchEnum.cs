@@ -28,6 +28,12 @@ namespace MOEWiki.DBMySQL.Enums
         [Description("Guild Tech")]
         Guild = 8,
         [Description("Trap Building")]
-        Trap = 9
+        Trap = 9,
+        [Description("Hellenic DLC")]
+        HellenicDLC = 10,
+        [Description("Xizhou DLC")]
+        XizhouDLC = 11,
+        [Description("Royal Carriages DLC")]
+        RoyalCarriagesDLC = 12
     }
 }

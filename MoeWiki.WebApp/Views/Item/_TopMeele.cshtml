@@ -1,0 +1,100 @@
+﻿@using MoeWiki.WebApp.Models.Item
+
+@model TopWeapon
+
+@{
+    Layout = null;
+}
+
+@{
+    var soloType = Model.SubcatsIdsSelected.Length == 1;
+    var soloLevel = Model.LevelsSelected.Length == 1;
+    var path = "/images/icon/";
+    var qualCount = Model.QualitiesSelected.Length;
+}
+
+<table style="text-align: center">
+    <tr>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1">Icon</div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Name"><div>Name</div></div></th>
+        @if (!soloLevel)
+        {
+            <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Level"><div>Level</div></div></th>
+        }
+        @if (!soloType)
+        {
+            <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Type"><div>Type</div></div></th>
+        }
+        <th colspan="@qualCount" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Piercing_Damage"><div>Piercing Damage</div></div></th>
+        <th colspan="@qualCount" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Slash_Damage"><div>Slash Damage</div></div></th>
+        <th colspan="@qualCount" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Blunt_Damage"><div>Blunt Damage</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Siege_Power"><div>Siege Power</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1">Durability</div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Opens_at_level"><div>Opens at level</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Movement_Penalty"><div>Movement Penalty</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Offhand_Penalty"><div>Offhand Penalty</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Lethal"><div>Lethal</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Broken_Armor"><div>Broken Armor</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Shield_Break"><div>Shield Break</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Weapon_Damage"><div>Weapon Damage</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1 sortable d-flex" id="Riding_Effect"><div>Riding Effect</div></div></th>
+        <th rowspan="2" class="border border-1 border-dark"><div class="p-1">DLC</div></th>
+    </tr>
+    <tr>        
+        @for (int i=0; i<3; i++) 
+        foreach (var qual in Model.QualitiesSelected)
+        {
+            <th class="border border-1 border-dark"><div class="p-1">@qual.Replace("Lvl","")</div></th>
+        }
+    </tr>
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td class="border border-1 border-dark">
+                <a class="item-link" href="/Item/Details/?id=@item.Id" target="_blank"><img src="@path@item.ImageName" href="/Item/Details/?id=@item.Id" target="_blank"></a>
+            </td>
+            <td class="border border-1 border-dark"><a class="item-link" href="/Item/Details/?id=@item.Id" target="_blank">@item.Name</a></td>
+            @if (!soloLevel) { <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Level")?.Value</td> }
+            @if (!soloType) { <td class="border border-1 border-dark">@item.Subcategory.Name</td> }
+            @foreach (var qual in Model.QualitiesSelected)
+            {
+                var text = item.ItemProperties.FirstOrDefault(f => f.Name == "Piercing Damage" && f.Quality.ToString() == qual)?.Value ?? "-";
+                <td class="border border-1 border-dark">@text</td>
+            }
+            @foreach (var qual in Model.QualitiesSelected)
+            {
+                var text = item.ItemProperties.FirstOrDefault(f => f.Name == "Slash Damage" && f.Quality.ToString() == qual)?.Value ?? "-";
+                <td class="border border-1 border-dark">@text</td>
+            }
+            @foreach (var qual in Model.QualitiesSelected)
+            {
+                var text = item.ItemProperties.FirstOrDefault(f => f.Name == "Blunt Damage" && f.Quality.ToString() == qual)?.Value ?? "-";
+                <td class="border border-1 border-dark">@text</td>
+            }
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Siege Power")?.Value</td>
+            @{
+                var dur = "";
+                foreach (var qual in Model.QualitiesSelected)
+                {
+                    dur += item.ItemProperties.FirstOrDefault(f => f.Name == "Durability" && f.Quality.ToString() == qual)?.Value ?? "-";
+                    dur += ' ';
+                }
+                dur = dur.Trim();
+                <td class="border border-1 border-dark">@dur</td>
+            }
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Opens at level")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Movement Penalty")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Offhand Penalty")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Lethal")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Broken Armor")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Shield Break")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Weapon Damage")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "Riding Effect")?.Value</td>
+            <td class="border border-1 border-dark">@item.ItemProperties.FirstOrDefault(f => f.Name == "DLC")?.Value</td>
+        </tr>    
+    }
+    <intut type="hidden" value="@Model.ActiveTab" id="activeTabMeele"></intut>
+    <intut type="hidden" value="@Model.OrderBy" id="OrderByMeele"></intut>
+    <intut type="hidden" value="@Model.Desc.ToString().ToLower()" id="DescMeele"></intut>
+</table>
+

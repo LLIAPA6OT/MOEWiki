@@ -32,8 +32,8 @@ namespace MOEWiki.DBMySQL.Models
         {
             get
             {
-                //var result = $"<div><b>{this.Id}|{this.Name}|</b><a href='/MapMarker/Edit/?id={this.Id}' target=\"_blank\">Edit</a>";
-                var result = $"<div><b>{this.Title}</b>";
+                var result = $"<div><b>{this.Id}|{this.Name}|</b><a href='/MapMarker/Edit/?id={this.Id}' target=\"_blank\">Edit</a>";
+                //var result = $"<div><b>{this.Title}</b>";
                 if (!string.IsNullOrWhiteSpace(this.Description))
                 {
                     result += $"<hr><p>{this.Description}</p>";

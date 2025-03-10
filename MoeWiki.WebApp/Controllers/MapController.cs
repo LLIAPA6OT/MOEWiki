@@ -1,7 +1,6 @@
 ﻿using EnumsNET;
 using Microsoft.AspNetCore.Mvc;
 using MoeWiki.WebApp.Models.Map;
-using MOEWiki.DBMySQL.Enums;
 using MOEWiki.DBMySQL.Gateways;
 
 namespace MoeWiki.WebApp.Controllers
@@ -11,6 +10,9 @@ namespace MoeWiki.WebApp.Controllers
         public IActionResult Index(int id = 1)
         {
             GatewaysFacade.WikiActionGateway.GenerateThenAdd(HttpContext.Connection.RemoteIpAddress?.ToString(), $"Map{id}");
+            if (id == 3)
+                return View("\\Views\\Map\\NewMapPlaceholder.cshtml");
+            if (id == 153486) id = 4;
             var model = new MapModel(GatewaysFacade.MapGateway.GetById(id));
             return View(model);
         }

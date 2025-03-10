@@ -44,9 +44,9 @@ namespace MOEWiki.DBMySQL.Models
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql("localhost;user=root;port=3306;password=Q1w2e3r4!;database=prod1;",
-                new MySqlServerVersion(new Version(8, 0)));
-            
+
+            optionsBuilder.UseMySql("server=localhost;user=root;port=3306;password=Q1w2e3r4!;database=prod1;",
+                new MySqlServerVersion(new Version(8, 0)));            
         }
     }
 }

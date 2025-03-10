@@ -10,7 +10,8 @@ namespace MOEWiki.DBMySQL.Gateways
     public class GatewaysFacade
     {
         private static ApplicationContext _currentContext;
-        private static string connStr = "localhost;user=root;port=3306;password=Q1w2e3r4!;database=prod1;";
+
+        private static string connStr = "server=localhost;user=root;port=3306;password=Q1w2e3r4!;database=prod1;";
         public GatewaysFacade() : this(connStr)
         {
         }
